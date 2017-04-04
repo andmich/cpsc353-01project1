@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import PIL, sys, argparse, binascii
 from PIL import Image
 parser = argparse.ArgumentParser()
@@ -48,7 +47,7 @@ def encrypt(picture, message, width, height):
     #store length of message
     length = len(message)
     #convert length of message to binary
-    msgLenBin = format(length, '033b')
+    msgLenBin = format(length, '032b')
 
     # get pixel rgb values
     rgbImg = picture.convert('RGB')
@@ -90,7 +89,7 @@ def encrypt(picture, message, width, height):
         j -= 1
 
     #store message in rest of pixels
-    i = width-1-12
+    i = width-1-11
     j = height-1
     msgPos = 0
     done = False
@@ -129,6 +128,7 @@ def encrypt(picture, message, width, height):
             done = True
     picture.save(args.finalImage)
 
+#def decrypt() - decrypt message in image
 def decrypt():
     # open image and get width and length
     img = Image.open(args.dImage)
@@ -139,7 +139,7 @@ def decrypt():
 
     #get message length
     msgLen = []
-    for i in range(width-1, (width-1) - 11, -1):
+    for i in range(width-1, width-12, -1):
         r, g, b = rgbImg.getpixel((i, height-1))
         red = list(format(r, '08b'))
         green = list(format(g, '08b'))
@@ -150,8 +150,10 @@ def decrypt():
         msgLen.insert(len(msgLen), blue[7])
 
     msgLen = ''.join(map(str, msgLen))
+    msgLen = msgLen[:len(msgLen)-1]
+
     #get message
-    i = width-1-12
+    i = width-12
     j = height-1
     done = False
     msg = []
@@ -173,7 +175,7 @@ def decrypt():
             j -= 1
             i = width - 1
 
-        if(len(msg) == int(msgLen, 2)):
+        if(len(msg) == int(msgLen,2)):
             done = True
     msg = ''.join(map(str, msg))
     temp = ''.join(map(str, msg))

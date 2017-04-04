@@ -1,4 +1,4 @@
-import PIL, sys, argparse, binascii
+import PIL, sys, argparse
 from PIL import Image
 parser = argparse.ArgumentParser()
 parser.add_argument('-e', action="store", help="Enrypt message", dest="msg")
